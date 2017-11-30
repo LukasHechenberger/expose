@@ -1,0 +1,54 @@
+{
+  "name": "@ls-age/expose",
+  "version": "0.1.0",
+  "description": "The easy way to expose a module for API and CLI usage ",
+  "main": "out/index.js",
+  "scripts": {
+    "compile": "babel -d out src",
+    "lint": "eslint src test",
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LukasHechenberger/expose.git"
+  },
+  "author": "Lukas Hechenberger <npm@ls-age.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LukasHechenberger/expose/issues"
+  },
+  "homepage": "https://github.com/LukasHechenberger/expose#readme",
+  "devDependencies": {
+    "@ls-age/eslint-config": "^0.6.0",
+    "ava": "^0.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.11.0"
+  },
+  "dependencies": {
+    "yup": "^0.23.0"
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2017
+    },
+    "extends": "@ls-age"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": 8
+          }
+        }
+      ]
+    ]
+  },
+  "ava": {
+    "require": [
+      "babel-register"
+    ]
+  }
+}
