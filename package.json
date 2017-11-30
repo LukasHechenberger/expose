@@ -5,6 +5,7 @@
   "main": "out/index.js",
   "scripts": {
     "compile": "babel -d out src",
+    "flow": "flow",
     "lint": "eslint src test",
     "test": "ava"
   },
@@ -22,13 +23,18 @@
     "@ls-age/eslint-config": "^0.6.0",
     "ava": "^0.23.0",
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.2",
     "babel-preset-env": "^1.6.1",
-    "eslint": "^4.11.0"
+    "babel-preset-flow": "^6.23.0",
+    "eslint": "^4.11.0",
+    "flow": "^0.2.3",
+    "flow-bin": "^0.59.0"
   },
   "dependencies": {
     "yup": "^0.23.0"
   },
   "eslintConfig": {
+    "parser": "babel-eslint",
     "parserOptions": {
       "ecmaVersion": 2017
     },
@@ -36,6 +42,7 @@
   },
   "babel": {
     "presets": [
+      "flow",
       [
         "env",
         {

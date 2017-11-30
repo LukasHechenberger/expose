@@ -1,14 +1,14 @@
-import { string } from 'yup';
+import { number } from 'yup';
 import type { Schema } from 'yup'; // eslint-disable-line
 import Option from '../Option';
 import type { DescribableAliasOptions } from '../Usage/Describable';
 
-export const schema: Schema<string> = string();
+export const schema = number();
 
-export default class StringOption extends Option<string> {
+export default class NumberOption extends Option<number> {
 
   static get typeName(): string {
-    return 'string';
+    return 'number';
   }
 
   constructor(options: DescribableAliasOptions) {

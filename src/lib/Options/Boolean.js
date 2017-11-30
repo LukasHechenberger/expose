@@ -1,35 +1,39 @@
 import { boolean } from 'yup';
-import Option from '../Option';
-import { UsageError } from '../Error';
+import Option, { MissingArgumentError, InvalidArgumentError } from '../Option';
+import type Context from '../Context';
+import type { DescribableAliasOptions } from '../Usage/Describable';
 
-export const schema = boolean();
+export const schema: * = boolean();
 
-export default class BooleanOption extends Option {
+export default class BooleanOption extends Option<boolean> {
 
-  async getValue(context) {
-    const { currentArg } = context;
-    let value;
+  static get typeName(): string {
+    return 'boolean';
+  }
 
-    if (currentArg.hasValue) {
-      try {
-        value = await schema.validate(currentArg.value);
-      } catch (e) {
-        throw new UsageError(
-          `Invalid value for '${this.options.name}' option: '${currentArg.value}'`,
-          context
-        );
-      }
-    } else if (context.hasNextArg) {
-      const nextArg = context.nextArg;
+  constructor(options: DescribableAliasOptions) {
+    super(Object.assign({}, options, { schema }));
+  }
 
-      try {
-        value = await schema.validate(nextArg.raw);
-        context.pickNextArg();
-      } catch (_) {
+  async getValue(context: Context): Promise<boolean> {
+    if (!context.currentArg) {
+      throw new Error('Cannot get value without a current arg');
+    }
+
+    const currentArg = context.currentArg;
+
+    let value: boolean;
+
+    try {
+      value = await super.getValue(context);
+    } catch (e) {
+      if (e instanceof MissingArgumentError) {
         value = true;
+      } else if (e instanceof InvalidArgumentError && !currentArg.value) {
+        value = true;
+      } else {
+        throw e;
       }
-    } else {
-      value = true;
     }
 
     return currentArg.isNegated ? !value : value;

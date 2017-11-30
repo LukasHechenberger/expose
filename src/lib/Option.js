@@ -1,39 +1,74 @@
+import type { Schema } from 'yup';
 import { UsageError } from './Error';
+import { DescribableAlias } from './Usage/Describable';
+import type { DescribableAliasOptions } from './Usage/Describable'; // eslint-disable-line
+import type { ArgumentHandler } from './ArgumentHandler';
+import type Context from './Context';
 
-export default class Option {
+export type OptionValue = string | number | boolean;
 
-  constructor(options = {}) {
-    this.options = options;
+export class MissingArgumentError extends UsageError {}
+export class InvalidArgumentError extends UsageError {}
+
+export default class Option<T: OptionValue> extends DescribableAlias implements ArgumentHandler {
+
+  name: string
+  alias: string[]
+  schema: Schema<T>
+
+  static get typeName(): string {
+    throw new Error('Must be implemented by all subclasses');
+  }
+
+  constructor(options: DescribableAliasOptions & { schema: Schema<*> }) {
+    super(options);
+
     this.schema = options.schema; // FIXME: Throw error if missing
   }
 
-  async getValue(context) {
+  async getValue(context: Context): Promise<T> {
     const { currentArg } = context;
 
-    let rawValue;
+    let rawValue: string;
+    let pickValueArg: boolean = false;
 
-    if (currentArg.hasValue) {
+    if (!currentArg) {
+      throw new Error('Cannot get value without a current arg');
+    }
+
+    if (currentArg.value) {
       rawValue = currentArg.value;
-    } else if (!context.hasNextArg || context.nextArg.isOption) {
-      throw new UsageError(`Missing argument for '${this.options.name}' option`, context);
     } else {
-      rawValue = context.pickNextArg().raw;
+      const nextArg = context.nextArg;
+      pickValueArg = true;
+
+      if (!nextArg || nextArg.isOption) {
+        throw new MissingArgumentError(`Missing argument for '${this.name}' option`, context);
+      }
+
+      rawValue = nextArg.raw;
     }
 
     try {
-      return await this.schema.validate(rawValue);
+      const converted: any = await this.schema.validate(rawValue);
+
+      if (pickValueArg) {
+        context.pickNextArg();
+      }
+
+      return converted;
     } catch (e) {
-      throw new UsageError(
-        `Invalid value for '${this.options.name}' option: '${currentArg.value}'`,
+      throw new InvalidArgumentError(
+        `Invalid value for '${this.name}' option: '${rawValue}'`,
         context
       );
     }
   }
 
-  async handle(context) {
-    const value = await this.getValue(context);
+  async handle(context: Context): Promise<Context> {
+    const value: any = await this.getValue(context);
 
-    context.setOption(this.options.name, value);
+    context.setOption(this.name, value);
 
     return context;
   }

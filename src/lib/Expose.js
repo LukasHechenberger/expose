@@ -1,27 +1,31 @@
 import Command from './Command';
 import Context from './Context';
 
+type ExposeOptions = {
+  description?: string,
+}
+
 export default class Expose extends Command {
 
-  constructor(options = {}) {
-    super(options);
+  constructor(options: ExposeOptions) {
+    const name: string = process.argv[1];
 
-    this.options.name = options.name || process.argv[1];
+    super(Object.assign({}, { name }, options));
   }
 
-  parse(args = true) {
-    const argsToUse = (args === true) ?
+  parse(args: true | string[] = true): Promise<Context> {
+    const argsToUse: string[] = (args === true) ?
       process.argv.slice(2) :
       args;
 
-    const nonEmptyArgs = argsToUse.filter(a => a.length);
+    const nonEmptyArgs: string[] = argsToUse.filter(a => a.length);
 
     const context = new Context(this, {
       args: nonEmptyArgs,
       config: {}, // FIXME: Insert config arg value
     });
 
-    return Promise.resolve().then(() => this.handle(context));
+    return this.handle(context);
   }
 
 }

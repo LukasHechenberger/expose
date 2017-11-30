@@ -1,6 +1,8 @@
+import type Context from './Context';
+
 export default class ExposeError extends Error {
 
-  constructor(message) {
+  constructor(message: string) {
     super(message);
 
     this.name = this.constructor.name;
@@ -10,7 +12,9 @@ export default class ExposeError extends Error {
 
 export class UsageError extends ExposeError {
 
-  constructor(message, context) {
+  context: Context
+
+  constructor(message: string, context: Context) {
     super(message);
 
     this.context = context;

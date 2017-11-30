@@ -1,34 +1,43 @@
 import { UsageError } from './Error';
+import { DescribableAlias } from './Usage/Describable';
+import AliasStorage from './Command/AliasStorage';
+import type { DescribableAliasOptions } from './Usage/Describable'; // eslint-disable-line
+import type Option from './Option';
+import type Context from './Context';
+import type { ArgumentHandler } from './ArgumentHandler';
 
-export default class Command {
+export default class Command extends DescribableAlias implements ArgumentHandler {
 
-  constructor(options = {}) {
-    this.options = options;
+  commands: AliasStorage<Command>
+  options: AliasStorage<Option<any>>
 
-    this.availableCommands = {};
-    this.availableOptions = {};
+  constructor(options: DescribableAliasOptions) {
+    super(options);
+
+    this.commands = new AliasStorage();
+    this.options = new AliasStorage();
   }
 
-  handle(context) {
-    if (!context.hasNextArg) {
-      // FIXME: Validate required options
-      return context;
-    }
-
+  async handle(context: Context): Promise<Context> {
     const arg = context.pickNextArg();
 
+    if (!arg) {
+      // FIXME: Validate required options
+      return Promise.resolve(context);
+    }
+
     if (arg.isOption) {
-      const option = this.availableOptions[arg.name];
+      const option: ?Option<any> = this.options.get(arg.name);
 
       if (option) {
         return option.handle(context)
-          .then(c => this.handle(c));
+          .then((c: Context) => this.handle(c));
       }
 
       throw new UsageError(`Unknown option '${arg.name}'`, context);
     }
 
-    const command = this.availableCommands[arg.name];
+    const command: ?Command = this.commands.get(arg.name);
 
     if (command) {
       context.setCommand(command);
@@ -38,23 +47,16 @@ export default class Command {
     throw new UsageError(`Unknown argument '${arg.name}'`, context);
   }
 
-  command(name, command) {
-    Object.assign(command.options, { name });
-
-    this.availableCommands[name] = command;
+  addCommand(command: Command) {
+    this.commands.add(command);
   }
 
-  addOption(name, option) {
-    Object.assign(option.options, { name });
-
-    this.availableOptions[name] = option;
+  addOption(option: Option<*>) {
+    this.options.add(option);
   }
 
-  addOptions(options) {
-    Object.entries(options)
-      .forEach(([name, option]) => {
-        this.addOption(name, option);
-      });
+  addOptions(options: Option<*>[]) {
+    options.forEach((o: Option<*>) => this.addOption(o));
   }
 
 }
