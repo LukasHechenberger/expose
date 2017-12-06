@@ -1,6 +1,6 @@
 import Table from './Usage/Table';
 import print from './Usage/print';
-import { header, section, desc, name, info, secondary } from './Usage/format';
+import { header, section, desc } from './Usage/format';
 import type { Printable } from './Usage/print'; // eslint-disable-line
 import type Command from './Command';
 import type Option, { OptionValue } from './Option';
@@ -128,7 +128,7 @@ export default class Context {
   }
 
   // Usage
-  get usage(): string {
+  getUsage(): string {
     const indent: string = '  ';
     const commandPath = this._commandPath
       .map((command: Command) => command.name)
@@ -148,7 +148,7 @@ export default class Context {
       lines.push('', section('Available commands:'), '');
 
       lines = lines.concat(availableCommands
-        .map((command: Command) => table.addLine([name(command.name), desc(command.description)]))
+        .map((command: Command) => table.addLine(command.usageInfo))
       );
     }
 
@@ -157,7 +157,7 @@ export default class Context {
       lines.push('', section('Available options:'), '');
 
       lines = lines.concat(availableOptions
-        .map((option: *) => table.addLine([name(`--${option.name} ${secondary(option.alias.map(a => `-${a}`).join(', '))}`), desc(option.description), info(`[${option.typeName}]`)]))
+        .map(option => table.addLine(option.usageInfo))
       );
     }
 
@@ -170,8 +170,7 @@ export default class Context {
       lines.push('', section('Global options:'), '');
 
       lines = lines.concat(globalOptions
-        // FIXME: Add option description
-        .map((option: *) => table.addLine([name(`--${option.name} ${secondary(option.alias.map(a => `-${a}`).join(', '))}`), desc(option.description), info(`[${option.typeName}]`)]))
+        .map(option => table.addLine(option.usageInfo))
       );
     }
 

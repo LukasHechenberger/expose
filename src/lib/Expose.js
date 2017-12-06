@@ -35,21 +35,20 @@ export default class Expose extends Command {
   printUsage(err: ?Error = undefined, exitCode: number = 1) {
     if (err) {
       if (err instanceof UsageError) {
-        console.error(err.context.usage);
+        console.error(err.context.getUsage());
       } else if (this._context) {
-        console.error(this._context.usage);
+        console.error(this._context.getUsage());
       }
 
       console.error('');
       console.error(colors.red(err.message));
-      console.error(err);
 
       process.exitCode = exitCode;
       return;
     }
 
     if (this._context) {
-      console.log(this._context.usage);
+      console.log(this._context.getUsage());
     } else {
       throw new Error('No arguments parsed yet');
     }

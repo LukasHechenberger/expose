@@ -1,3 +1,5 @@
+import { name, secondary, desc } from './format';
+
 export type DescribableOptions = {
   name: string,
   description?: string,
@@ -31,6 +33,22 @@ export class DescribableAlias extends Describable {
     } else {
       this.alias = [];
     }
+  }
+
+  get usageInfoName(): string {
+    let nameText = this.name;
+
+    if (this.alias.length) {
+      nameText = `${nameText} ${secondary(
+        this.alias.map(a => `-${a}`).join(', ')
+      )}`;
+    }
+
+    return nameText;
+  }
+
+  get usageInfo(): string[] {
+    return [name(this.usageInfoName), desc(this.description)];
   }
 
 }
