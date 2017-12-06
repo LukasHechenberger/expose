@@ -1,11 +1,15 @@
+import colors from 'chalk';
 import Command from './Command';
 import Context from './Context';
+import { UsageError, ImplementationError } from './Error';
 
 type ExposeOptions = {
   description?: string,
 }
 
 export default class Expose extends Command {
+
+  _context: ?Context
 
   constructor(options: ExposeOptions) {
     const name: string = process.argv[1];
@@ -20,12 +24,60 @@ export default class Expose extends Command {
 
     const nonEmptyArgs: string[] = argsToUse.filter(a => a.length);
 
-    const context = new Context(this, {
+    this._context = new Context(this, {
       args: nonEmptyArgs,
       config: {}, // FIXME: Insert config arg value
     });
 
-    return this.handle(context);
+    return this.handle(this._context);
+  }
+
+  printUsage(err: ?Error = undefined, exitCode: number = 1) {
+    if (err) {
+      if (err instanceof UsageError) {
+        console.error(err.context.usage);
+      } else if (this._context) {
+        console.error(this._context.usage);
+      }
+
+      console.error('');
+      console.error(colors.red(err.message));
+      console.error(err);
+
+      process.exitCode = exitCode;
+      return;
+    }
+
+    if (this._context) {
+      console.log(this._context.usage);
+    } else {
+      throw new Error('No arguments parsed yet');
+    }
+  }
+
+  async run({ args }: { args?: string[] } = {}): Promise<any> {
+    let context: ?Context;
+
+    try {
+      context = await this.parse(args);
+
+      if (!context.hasAction) {
+        if (context.currentCommand === this) {
+          throw new UsageError('No command specified', context);
+        } else {
+          throw new ImplementationError('No action for current command', context);
+        }
+      }
+    } catch (err) {
+      this.printUsage(err);
+      context = null;
+    }
+
+    if (context) {
+      return context.execute();
+    }
+
+    return null;
   }
 
 }

@@ -21,3 +21,7 @@ export class UsageError extends ExposeError {
   }
 
 }
+
+export class ImplementationError extends UsageError {
+
+}

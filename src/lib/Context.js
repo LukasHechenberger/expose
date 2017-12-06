@@ -1,3 +1,7 @@
+import Table from './Usage/Table';
+import print from './Usage/print';
+import { header, section, desc, name, info, secondary } from './Usage/format';
+import type { Printable } from './Usage/print'; // eslint-disable-line
 import type Command from './Command';
 import type Option, { OptionValue } from './Option';
 
@@ -40,6 +44,7 @@ export default class Context {
   _command: Command
   _commandPath: Command[]
   _currentArg: ?ParsedArg
+  _action: ?RunAction
 
   constructor(command: Command, { config = {}, args = [] }: { config: {}, args: string[] } = {}) {
     this._config = config;
@@ -77,9 +82,44 @@ export default class Context {
     return undefined;
   }
 
+  get currentCommand(): Command {
+    return this._command;
+  }
+
+  getParentCommand(command: Command): ?Command {
+    const index = this._commandPath.indexOf(command);
+
+    if (index >= 1) {
+      return this._commandPath[index - 1];
+    }
+
+    return null;
+  }
+
+  // Handlers
+  setAction(action: RunAction) {
+    if (!this._action) {
+      this._action = action;
+    }
+  }
+
+  get hasAction(): boolean {
+    return !!this._action || !!this.currentCommand.action;
+  }
+
+  execute(): any {
+    const action = this._action || this.currentCommand.action;
+
+    if (!action) {
+      throw new Error('No handler registered');
+    }
+
+    return action(this);
+  }
+
   // Options
-  setOption(name: string, value: OptionValue) {
-    this.options[name] = value;
+  setOption(optionName: string, value: OptionValue) {
+    this.options[optionName] = value;
   }
 
   setCommand(command: Command) {
@@ -94,31 +134,30 @@ export default class Context {
       .map((command: Command) => command.name)
       .join(' ');
 
-    let lines: string[] = [`Usage: ${commandPath}`];
+    const table = new Table({ indent });
+    table.setAlign('right', 2);
+
+    let lines: Array<string | Printable> = [`Usage: ${header(commandPath)}`];
 
     if (this._command.description.length) {
-      lines.push(this._command.description);
+      lines.push('', desc(`${indent}${this._command.description}`));
     }
 
-    // FIXME: Add command description
-
-    const availableCommands = this._command.commands;
+    const availableCommands = this._command.commands.toArray();
     if (availableCommands.length) {
-      lines.push('', 'Available commands:', '');
+      lines.push('', section('Available commands:'), '');
 
-      lines = lines.concat(availableCommands.toArray()
-        // FIXME: Add command description
-        .map((command: Command) => `${indent}${command.name} ${command.description}`)
+      lines = lines.concat(availableCommands
+        .map((command: Command) => table.addLine([name(command.name), desc(command.description)]))
       );
     }
 
     const availableOptions: * = this._command.options.toArray();
     if (availableOptions.length) {
-      lines.push('', 'Available options:', '');
+      lines.push('', section('Available options:'), '');
 
       lines = lines.concat(availableOptions
-        // FIXME: Add option description
-        .map((option: *) => `${indent}--${option.name} ${option.description} [${option.constructor.typeName}]`)
+        .map((option: *) => table.addLine([name(`--${option.name} ${secondary(option.alias.map(a => `-${a}`).join(', '))}`), desc(option.description), info(`[${option.typeName}]`)]))
       );
     }
 
@@ -128,15 +167,17 @@ export default class Context {
       []);
 
     if (globalOptions.length) {
-      lines.push('', 'Global options:', '');
+      lines.push('', section('Global options:'), '');
 
       lines = lines.concat(globalOptions
         // FIXME: Add option description
-        .map((option: *) => `${indent}--${option.name} ${option.description} [${option.constructor.typeName}]`)
+        .map((option: *) => table.addLine([name(`--${option.name} ${secondary(option.alias.map(a => `-${a}`).join(', '))}`), desc(option.description), info(`[${option.typeName}]`)]))
       );
     }
 
-    return lines.join('\n');
+    return print(lines);
   }
 
 }
+
+export type RunAction = (context: Context) => any
