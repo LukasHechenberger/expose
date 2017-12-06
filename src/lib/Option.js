@@ -107,7 +107,7 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
     return super.formatUsageName(`--${usageName}`);
   }
 
-  formatUsageAlias(alias): string {
+  formatUsageAlias(alias: string): string {
     return super.formatUsageAlias(`-${alias}`);
   }
 
