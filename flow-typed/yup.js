@@ -17,6 +17,7 @@ declare module 'yup' {
 
   // Classes
   declare export class Schema<T> {
+    _type: string;
     clone(): Schema<T>;
     label(label: string): Schema<T>;
     meta(metadata: {}): Schema<T>;

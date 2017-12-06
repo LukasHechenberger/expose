@@ -16,8 +16,8 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
   alias: string[]
   schema: Schema<T>
 
-  static get typeName(): string {
-    throw new Error('Must be implemented by all subclasses');
+  get typeName(): string {
+    return this.schema._type;
   }
 
   constructor(options: DescribableAliasOptions & { schema: Schema<*> }) {

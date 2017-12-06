@@ -1,17 +1,13 @@
 import { boolean } from 'yup';
 import Option, { MissingArgumentError, InvalidArgumentError } from '../Option';
 import type Context from '../Context';
-import type { DescribableAliasOptions } from '../Usage/Describable';
+import type { OptionOptions } from '../Option'; // eslint-disable-line
 
 export const schema: * = boolean();
 
 export default class BooleanOption extends Option<boolean> {
 
-  static get typeName(): string {
-    return 'boolean';
-  }
-
-  constructor(options: DescribableAliasOptions) {
+  constructor(options: OptionOptions) {
     super(Object.assign({}, options, { schema }));
   }
 
