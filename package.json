@@ -31,6 +31,8 @@
     "flow-bin": "^0.59.0"
   },
   "dependencies": {
+    "chalk": "^2.3.0",
+    "string-length": "^2.0.0",
     "yup": "^0.23.0"
   },
   "eslintConfig": {
