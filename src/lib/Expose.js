@@ -10,11 +10,17 @@ type ExposeOptions = {
 export default class Expose extends Command {
 
   _context: ?Context
+  logger: {
+    +log: (...data: Array<any>) => void,
+    +error: (...data: Array<any>) => void
+  }
 
   constructor(options: ExposeOptions) {
     const name: string = process.argv[1];
 
     super(Object.assign({}, { name }, options));
+
+    this.logger = console;
   }
 
   parse(args: true | string[] = true): Promise<Context> {
@@ -35,20 +41,20 @@ export default class Expose extends Command {
   printUsage(err: ?Error = undefined, exitCode: number = 1) {
     if (err) {
       if (err instanceof UsageError) {
-        console.error(err.context.getUsage());
+        this.logger.error(err.context.getUsage());
       } else if (this._context) {
-        console.error(this._context.getUsage());
+        this.logger.error(this._context.getUsage());
       }
 
-      console.error('');
-      console.error(colors.red(err.message));
+      this.logger.error('');
+      this.logger.error(colors.red(err.message));
 
       process.exitCode = exitCode;
       return;
     }
 
     if (this._context) {
-      console.log(this._context.getUsage());
+      this.logger.log(this._context.getUsage());
     } else {
       throw new Error('No arguments parsed yet');
     }

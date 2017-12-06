@@ -1,7 +1,7 @@
 import type { Schema } from 'yup';
 import { UsageError } from './Error';
 import { DescribableAlias } from './Usage/Describable';
-import { name, desc, info } from './Usage/format';
+import { info } from './Usage/format';
 import type { DescribableAliasOptions } from './Usage/Describable'; // eslint-disable-line
 import type { ArgumentHandler } from './ArgumentHandler';
 import type Context, { RunAction } from './Context';
