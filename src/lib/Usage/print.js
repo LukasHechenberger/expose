@@ -10,7 +10,8 @@ export default function print(lines: Printable[]) {
 
 export type Align = 'left' | 'right';
 
-export function pad(text: string, targetLength: number, align: Align = 'left', fill: string = ' '): string {
+export function pad(text: string, targetLength: number, align: Align = 'left', fill: string = ' ')
+: string {
   const originalLength = stringLength(text);
   const paddingRequired = targetLength - originalLength;
   const padding = fill.repeat(paddingRequired);
