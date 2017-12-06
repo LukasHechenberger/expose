@@ -35,16 +35,24 @@ export class DescribableAlias extends Describable {
     }
   }
 
+  formatUsageName(usageName: string): string {
+    return name(usageName);
+  }
+
+  formatUsageAlias(alias: string): string {
+    return secondary(alias);
+  }
+
   get usageInfoName(): string {
     let nameText = this.name;
 
     if (this.alias.length) {
-      nameText = `${nameText} ${secondary(
-        this.alias.map(a => `-${a}`).join(', ')
-      )}`;
+      nameText = `${nameText}${secondary(`, ${
+        this.alias.map(a => this.formatUsageAlias(a)).join(', ')
+      }`)}`;
     }
 
-    return nameText;
+    return this.formatUsageName(nameText);
   }
 
   get usageInfo(): string[] {

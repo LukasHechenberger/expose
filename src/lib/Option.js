@@ -103,8 +103,16 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
     return context;
   }
 
+  formatUsageName(usageName: string): string {
+    return super.formatUsageName(`--${usageName}`);
+  }
+
+  formatUsageAlias(alias): string {
+    return super.formatUsageAlias(`-${alias}`);
+  }
+
   get usageInfo(): string[] {
-    return [name(`--${this.usageInfoName}`), desc(this.description), info(`[${this.typeName}]`)];
+    return [...super.usageInfo, info(`[${this.typeName}]`)];
   }
 
 }
