@@ -1,13 +1,13 @@
 import { boolean } from 'yup';
 import Option, { MissingArgumentError, InvalidArgumentError } from '../Option';
 import type Context from '../Context';
-import type { OptionOptions } from '../Option'; // eslint-disable-line
+import type { TypedOptionOptions } from '../Option'; // eslint-disable-line
 
 export const schema: * = boolean();
 
 export default class BooleanOption extends Option<boolean> {
 
-  constructor(options: OptionOptions) {
+  constructor(options: TypedOptionOptions) {
     super(Object.assign({}, options, { schema }));
   }
 

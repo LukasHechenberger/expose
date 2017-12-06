@@ -3,27 +3,47 @@ import { UsageError } from './Error';
 import { DescribableAlias } from './Usage/Describable';
 import type { DescribableAliasOptions } from './Usage/Describable'; // eslint-disable-line
 import type { ArgumentHandler } from './ArgumentHandler';
-import type Context from './Context';
+import type Context, { RunAction } from './Context';
 
 export type OptionValue = string | number | boolean;
+export type SetValueCallback = (OptionValue) => any
 
 export class MissingArgumentError extends UsageError {}
 export class InvalidArgumentError extends UsageError {}
+
+export type TypedOptionOptions = DescribableAliasOptions & {
+  run?: RunAction,
+  set?: SetValueCallback
+}
+
+export type RawOptionOptions = TypedOptionOptions & {
+  schema: Schema<*>,
+}
 
 export default class Option<T: OptionValue> extends DescribableAlias implements ArgumentHandler {
 
   name: string
   alias: string[]
-  schema: Schema<T>
+  schema: Schema<*>
+  _action: ?RunAction
+  _setValueCallback: ?SetValueCallback
 
   get typeName(): string {
     return this.schema._type;
   }
 
-  constructor(options: DescribableAliasOptions & { schema: Schema<*> }) {
+  constructor(options: RawOptionOptions) {
     super(options);
 
     this.schema = options.schema; // FIXME: Throw error if missing
+
+    if (options.run) {
+      this._action = options.run;
+    }
+
+    if (options.set) {
+      this._setValueCallback = options.set;
+    }
   }
 
   async getValue(context: Context): Promise<T> {
@@ -69,6 +89,15 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
     const value: any = await this.getValue(context);
 
     context.setOption(this.name, value);
+
+    if (this._setValueCallback) {
+      await Promise.resolve()
+        .then(() => this._setValueCallback && this._setValueCallback(value));
+    }
+
+    if (this._action) {
+      context.setAction(this._action);
+    }
 
     return context;
   }
