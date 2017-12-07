@@ -1,4 +1,4 @@
-import type { Schema } from 'yup';
+import type { Schema, ValidationError } from 'yup';
 import { UsageError } from './Error';
 import { DescribableAlias } from './Usage/Describable';
 import { info } from './Usage/format';
@@ -10,7 +10,27 @@ export type OptionValue = string | number | boolean;
 export type SetValueCallback = (OptionValue) => any
 
 export class MissingArgumentError extends UsageError {}
-export class InvalidArgumentError extends UsageError {}
+export class InvalidArgumentError extends UsageError {
+
+  +validationError: ValidationError
+
+  constructor(message: string, validationError: ValidationError, context: Context) {
+    super(message, context);
+
+    this.validationError = validationError;
+  }
+
+  get additionalInfo(): string {
+    const errors = this.validationError.errors;
+
+    if (errors.length > 1) {
+      return ` - ${errors.join('\n - ')}`;
+    }
+
+    return errors[0];
+  }
+
+}
 
 export type TypedOptionOptions<T> = DescribableAliasOptions & {
   run?: RunAction,
@@ -38,6 +58,10 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
     super(options);
 
     this.schema = options.schema.label(options.name); // FIXME: Throw error if missing
+
+    if (options.extendSchema) {
+      this.schema = options.extendSchema(this.schema);
+    }
 
     if (options.run) {
       this._action = options.run;
@@ -72,7 +96,7 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
     }
 
     try {
-      const converted: any = await this.schema.validate(rawValue);
+      const converted: any = await this.schema.validate(rawValue, { abortEarly: false });
 
       if (pickValueArg) {
         context.pickNextArg();
@@ -82,6 +106,7 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
     } catch (e) {
       throw new InvalidArgumentError(
         `Invalid value for '${this.name}' option: '${rawValue}'`,
+        e,
         context
       );
     }
