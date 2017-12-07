@@ -3,10 +3,12 @@ import Command from './Command';
 import Context from './Context';
 import BooleanOption from './Options/Boolean';
 import { UsageError, ImplementationError } from './Error';
+import type { CommandOptions } from './Command'; // eslint-disable-line
 import type { TypedOptionOptions } from './Option';
 
 type ExposeOptions = {
-  description?: string,
+  ...CommandOptions,
+  name?: string,
 }
 
 export default class Expose extends Command {

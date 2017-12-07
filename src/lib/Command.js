@@ -6,7 +6,7 @@ import type Option from './Option';
 import type Context, { ParsedArg, RunAction } from './Context';
 import type { ArgumentHandler } from './ArgumentHandler';
 
-type CommandOptions = DescribableAliasOptions & {
+export type CommandOptions = DescribableAliasOptions & {
   run?: RunAction
 }
 
