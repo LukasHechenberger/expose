@@ -3,6 +3,7 @@ import print from './Usage/print';
 import { header, section, desc } from './Usage/format';
 import type { Printable } from './Usage/print'; // eslint-disable-line
 import type Command from './Command';
+import type Expose from './Expose';
 import type Option, { OptionValue } from './Option';
 
 const argRegExp = /(-+)?(no-)?([^=]+)(?:=(.+))?/;
@@ -45,13 +46,15 @@ export default class Context {
   _commandPath: Command[]
   _currentArg: ?ParsedArg
   _action: ?RunAction
+  +cli: Expose
 
-  constructor(command: Command, { config = {}, args = [] }: { config: {}, args: string[] } = {}) {
+  constructor(command: Expose, { config = {}, args = [] }: { config: {}, args: string[] } = {}) {
     this._config = config;
     this._args = args.map(raw => new ParsedArg(raw));
     this._processedArgs = [];
+    this.cli = command;
 
-    // Results
+    // State
     this.options = {};
     this._command = command;
     this._commandPath = [command];
