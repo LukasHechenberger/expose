@@ -53,6 +53,14 @@ export default class Expose extends Command {
       this.logger.error('');
       this.logger.error(colors.red(err.message));
 
+      if (err instanceof UsageError) {
+        const info = err.additionalInfo;
+
+        if (info) {
+          this.logger.error(colors.gray(info));
+        }
+      }
+
       process.exitCode = exitCode;
       return;
     }
