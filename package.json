@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LukasHechenberger/expose.git"
+    "url": "git+https://github.com/ls-age/expose.git"
   },
   "author": "Lukas Hechenberger <npm@ls-age.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/LukasHechenberger/expose/issues"
+    "url": "https://github.com/ls-age/expose/issues"
   },
-  "homepage": "https://github.com/LukasHechenberger/expose#readme",
+  "homepage": "https://github.com/ls-age/expose#readme",
   "devDependencies": {
     "@ls-age/eslint-config": "^0.6.0",
     "ava": "^0.23.0",
