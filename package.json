@@ -1,7 +1,7 @@
 {
   "name": "@ls-age/expose",
   "version": "0.1.0",
-  "description": "The easy way to expose a module for API and CLI usage ",
+  "description": "The easy way to expose a module for CLI usage",
   "main": "out/index.js",
   "scripts": {
     "compile": "babel -d out src",
