@@ -9,11 +9,16 @@ import type { TypedOptionOptions } from './Option';
 type ExposeOptions = {
   ...CommandOptions,
   name?: string,
+  onResult?: (result: ?any) => void,
+  onError?: (error: Error) => void,
 }
 
 export default class Expose extends Command {
 
   _context: ?Context
+  _resultHandler: ?((result: ?any) => void)
+  _errorHandler: ?((error: Error) => void)
+
   logger: {
     +log: (...data: Array<any>) => void,
     +error: (...data: Array<any>) => void
@@ -25,6 +30,8 @@ export default class Expose extends Command {
     super(Object.assign({}, { name }, options));
 
     this.logger = console;
+    this._resultHandler = options.onResult;
+    this._errorHandler = options.onError;
   }
 
   parse(args: true | string[] = true): Promise<Context> {
@@ -91,7 +98,23 @@ export default class Expose extends Command {
     }
 
     if (context) {
-      return context.execute();
+      return context.execute()
+        .then(result => {
+          if (this._resultHandler) {
+            return this._resultHandler(result);
+          }
+
+          return result;
+        })
+        .catch(err => {
+          if (this._errorHandler) {
+            return this._errorHandler(err);
+          }
+
+          this.logger.error(err);
+          process.exitCode = 1;
+          return;
+        });
     }
 
     return null;
