@@ -1,7 +1,9 @@
 import colors from 'chalk';
 import Command from './Command';
 import Context from './Context';
+import BooleanOption from './Options/Boolean';
 import { UsageError, ImplementationError } from './Error';
+import type { TypedOptionOptions } from './Option';
 
 type ExposeOptions = {
   description?: string,
@@ -85,4 +87,29 @@ export default class Expose extends Command {
     return null;
   }
 
+  // Concrete options
+
+  addVersion(version: string, { name, alias, description }: OptionOverrideOptions = {}) {
+    this.addOption(new BooleanOption({
+      name: name || 'version',
+      alias: alias || 'v',
+      description: description || 'Print version',
+      run: () => this.logger.log(version),
+    }));
+  }
+
+  addHelp({ name, alias, description }: OptionOverrideOptions = {}) {
+    this.addOption(new BooleanOption({
+      name: name || 'help',
+      alias: alias || 'h',
+      description: description || 'Show help',
+      run: context => this.logger.log(`${context.getUsage()}\n`),
+    }));
+  }
+
 }
+
+type OptionOverrideOptions = {
+  ...TypedOptionOptions,
+  name?: string
+};
