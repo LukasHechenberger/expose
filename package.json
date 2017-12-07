@@ -1,6 +1,6 @@
 {
   "name": "@ls-age/expose",
-  "version": "0.2.0-beta.2",
+  "version": "0.2.0-beta.3",
   "description": "The easy way to expose a module for CLI usage",
   "main": "out/index.js",
   "scripts": {
