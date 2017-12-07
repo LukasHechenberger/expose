@@ -1,0 +1,6 @@
+{
+  "extends": "@ls-age/eslint-config/ava",
+  "parserOptions": {
+    "ecmaVersion": 2017
+  }
+}
