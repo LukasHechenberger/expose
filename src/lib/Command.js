@@ -7,7 +7,8 @@ import type Context, { ParsedArg, RunAction } from './Context';
 import type { ArgumentHandler } from './ArgumentHandler';
 
 export type CommandOptions = DescribableAliasOptions & {
-  run?: RunAction
+  run?: RunAction,
+  options?: Option<*>[],
 }
 
 export default class Command extends DescribableAlias implements ArgumentHandler {
@@ -22,6 +23,10 @@ export default class Command extends DescribableAlias implements ArgumentHandler
     this.commands = new AliasStorage();
     this.options = new AliasStorage();
     this._action = options.run;
+
+    if (options.options) {
+      this.addOptions(options.options);
+    }
   }
 
   async handleArg(arg: ParsedArg, context: Context): Promise<Context> {
