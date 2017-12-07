@@ -37,7 +37,7 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
   constructor(options: RawOptionOptions<T>) {
     super(options);
 
-    this.schema = options.schema; // FIXME: Throw error if missing
+    this.schema = options.schema.label(options.name); // FIXME: Throw error if missing
 
     if (options.run) {
       this._action = options.run;
