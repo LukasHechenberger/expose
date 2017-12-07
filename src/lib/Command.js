@@ -38,7 +38,7 @@ export default class Command extends DescribableAlias implements ArgumentHandler
         return parentCommand.handleArg(arg, context);
       }
 
-      throw new UsageError(`Unknown option '${arg.name}'`, context);
+      throw new UsageError(`Unknown option '${arg.raw}'`, context);
     }
 
     const command: ?Command = this.commands.get(arg.name);
@@ -48,7 +48,7 @@ export default class Command extends DescribableAlias implements ArgumentHandler
       return command.handle(context);
     }
 
-    throw new UsageError(`Unknown argument '${arg.name}'`, context);
+    throw new UsageError(`Unknown argument '${arg.raw}'`, context);
   }
 
   async handle(context: Context): Promise<Context> {
