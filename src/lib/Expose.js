@@ -113,7 +113,7 @@ export default class Expose extends Command {
 
           this.logger.error(err);
           process.exitCode = 1;
-          return;
+          return err;
         });
     }
 
