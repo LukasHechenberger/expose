@@ -6,18 +6,20 @@ import { UsageError, ImplementationError } from './Error';
 import type { CommandOptions } from './Command'; // eslint-disable-line
 import type { TypedOptionOptions } from './Option';
 
-type ExposeOptions = {
-  ...CommandOptions,
+type ResultHandler = (result: any) => void;
+type ErrorHandler = (error: Error) => void;
+
+type ExposeOptions = CommandOptions & {
   name?: string,
-  onResult?: (result: ?any) => void,
-  onError?: (error: Error) => void,
+  onResult?: ResultHandler,
+  onError?: ErrorHandler,
 }
 
 export default class Expose extends Command {
 
   _context: ?Context
-  _resultHandler: ?((result: ?any) => void)
-  _errorHandler: ?((error: Error) => void)
+  _resultHandler: (result: any) => void
+  _errorHandler: ?ErrorHandler
 
   logger: {
     +log: (...data: Array<any>) => void,
@@ -30,8 +32,14 @@ export default class Expose extends Command {
     super(Object.assign({}, { name }, options));
 
     this.logger = console;
-    this._resultHandler = options.onResult;
-    this._errorHandler = options.onError;
+
+    if (options.onResult) {
+      this._resultHandler = options.onResult;
+    }
+
+    if (options.onError) {
+      this._errorHandler = options.onError;
+    }
   }
 
   parse(args: true | string[] = true): Promise<Context> {
