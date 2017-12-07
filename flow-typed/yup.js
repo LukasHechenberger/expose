@@ -8,16 +8,16 @@ declare module 'yup' {
   };
 
   declare type ValidationOptions = {
-    strict: ?boolean; // default to false;
-    abortEarly: ?boolean; // default to true;
-    stripUnknown: ?boolean; // defaults to false;
-    recursive: ?boolean; // defaults to true;
-    context: ?{};
+    strict?: boolean; // default to false;
+    abortEarly?: boolean; // default to true;
+    stripUnknown?: boolean; // defaults to false;
+    recursive?: boolean; // defaults to true;
+    context?: {};
   }
 
   // Classes
   declare export class Schema<T> {
-    _type: string;
+    +_type: string;
     clone(): Schema<T>;
     label(label: string): Schema<T>;
     meta(metadata: {}): Schema<T>;
