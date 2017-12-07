@@ -117,7 +117,7 @@ export default class Context {
       throw new Error('No handler registered');
     }
 
-    return action(this);
+    return Promise.resolve().then(() => action(this));
   }
 
   // Options
