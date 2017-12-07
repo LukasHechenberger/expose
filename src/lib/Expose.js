@@ -99,7 +99,7 @@ export default class Expose extends Command {
 
   // Concrete options
 
-  addVersion(version: string, { name, alias, description }: OptionOverrideOptions = {}) {
+  addVersion(version: string, { name, alias, description }: OptionOverrideOptions<boolean> = {}) {
     this.addOption(new BooleanOption({
       name: name || 'version',
       alias: alias || 'v',
@@ -108,7 +108,7 @@ export default class Expose extends Command {
     }));
   }
 
-  addHelp({ name, alias, description }: OptionOverrideOptions = {}) {
+  addHelp({ name, alias, description }: OptionOverrideOptions<boolean> = {}) {
     this.addOption(new BooleanOption({
       name: name || 'help',
       alias: alias || 'h',
@@ -119,7 +119,7 @@ export default class Expose extends Command {
 
 }
 
-type OptionOverrideOptions = {
-  ...TypedOptionOptions,
+type OptionOverrideOptions<T> = {
+  ...TypedOptionOptions<T>,
   name?: string
 };

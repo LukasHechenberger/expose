@@ -12,20 +12,21 @@ export type SetValueCallback = (OptionValue) => any
 export class MissingArgumentError extends UsageError {}
 export class InvalidArgumentError extends UsageError {}
 
-export type TypedOptionOptions = DescribableAliasOptions & {
+export type TypedOptionOptions<T> = DescribableAliasOptions & {
   run?: RunAction,
-  set?: SetValueCallback
+  set?: SetValueCallback,
+  extendSchema?: (schema: Schema<T>) => Schema<T>
 }
 
-export type RawOptionOptions = TypedOptionOptions & {
-  schema: Schema<*>,
+export type RawOptionOptions<T> = TypedOptionOptions<T> & {
+  schema: Schema<T>,
 }
 
 export default class Option<T: OptionValue> extends DescribableAlias implements ArgumentHandler {
 
   name: string
   alias: string[]
-  schema: Schema<*>
+  schema: Schema<T>
   _action: ?RunAction
   _setValueCallback: ?SetValueCallback
 
@@ -33,7 +34,7 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
     return this.schema._type;
   }
 
-  constructor(options: RawOptionOptions) {
+  constructor(options: RawOptionOptions<T>) {
     super(options);
 
     this.schema = options.schema; // FIXME: Throw error if missing

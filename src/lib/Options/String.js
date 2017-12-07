@@ -7,7 +7,7 @@ export const schema: Schema<string> = string();
 
 export default class StringOption extends Option<string> {
 
-  constructor(options: TypedOptionOptions) {
+  constructor(options: TypedOptionOptions<string>) {
     super(Object.assign({}, options, { schema }));
   }
 

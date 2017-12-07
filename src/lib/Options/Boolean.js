@@ -7,7 +7,7 @@ export const schema: * = boolean();
 
 export default class BooleanOption extends Option<boolean> {
 
-  constructor(options: TypedOptionOptions) {
+  constructor(options: TypedOptionOptions<boolean>) {
     super(Object.assign({}, options, { schema }));
   }
 

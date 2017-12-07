@@ -7,7 +7,7 @@ export const schema = number();
 
 export default class NumberOption extends Option<number> {
 
-  constructor(options: TypedOptionOptions) {
+  constructor(options: TypedOptionOptions<number>) {
     super(Object.assign({}, options, { schema }));
   }
 
