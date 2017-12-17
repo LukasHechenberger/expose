@@ -35,6 +35,7 @@
     "standard-version": "^4.2.0"
   },
   "dependencies": {
+    "@ls-age/logger": "^0.5.0-beta.0",
     "chalk": "^2.3.0",
     "string-length": "^2.0.0",
     "yup": "^0.23.0"

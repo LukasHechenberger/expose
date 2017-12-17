@@ -1,4 +1,5 @@
 import colors from 'chalk';
+import { Logger } from '@ls-age/logger';
 import Command from './Command';
 import Context from './Context';
 import BooleanOption from './Options/Boolean';
@@ -22,7 +23,9 @@ export default class Expose extends Command {
   _errorHandler: ?ErrorHandler
 
   logger: {
-    +log: (...data: Array<any>) => void,
+    +debug: (...data: Array<any>) => void,
+    +info: (...data: Array<any>) => void,
+    +warn: (...data: Array<any>) => void,
     +error: (...data: Array<any>) => void
   }
 
@@ -31,7 +34,7 @@ export default class Expose extends Command {
 
     super(Object.assign({}, { name }, options));
 
-    this.logger = console;
+    this.logger = new Logger({ timestamp: false }).pipe(process.stdout);
 
     if (options.onResult) {
       this._resultHandler = options.onResult;
@@ -81,7 +84,7 @@ export default class Expose extends Command {
     }
 
     if (this._context) {
-      this.logger.log(this._context.getUsage());
+      this.logger.info(this._context.getUsage());
     } else {
       throw new Error('No arguments parsed yet');
     }
@@ -135,7 +138,7 @@ export default class Expose extends Command {
       name: name || 'version',
       alias: alias || 'v',
       description: description || 'Print version',
-      run: () => this.logger.log(version),
+      run: () => this.logger.info(version),
     }));
   }
 
@@ -144,7 +147,7 @@ export default class Expose extends Command {
       name: name || 'help',
       alias: alias || 'h',
       description: description || 'Show help',
-      run: context => this.logger.log(`${context.getUsage()}\n`),
+      run: context => this.logger.info(`${context.getUsage()}\n`),
     }));
   }
 
