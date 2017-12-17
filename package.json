@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/ls-age/expose#readme",
   "devDependencies": {
+    "@ls-age/bump-version": "^0.1.1",
     "@ls-age/eslint-config": "^0.6.0",
     "ava": "^0.23.0",
     "babel-cli": "^6.26.0",
