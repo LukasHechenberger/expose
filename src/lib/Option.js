@@ -53,7 +53,7 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
   _isArrayOption: boolean
 
   get typeName(): string {
-    return this.schema._type;
+    return `${this.schema._type}${this._isArrayOption ? '[]' : ''}`;
   }
 
   constructor(options: RawOptionOptions<T>) {
@@ -162,7 +162,7 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
   }
 
   get usageInfo(): string[] {
-    return [...super.usageInfo, info(`[${this.typeName}]`)];
+    return [...super.usageInfo, info(`${this.typeName}`)];
   }
 
 }
