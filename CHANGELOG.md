@@ -1,5 +1,10 @@
-<a name="0.3.0-beta.0"></a>
-# 0.3.0-beta.0 (2017-12-18)
+<a name="0.3.0-beta.1"></a>
+# 0.3.0-beta.1 (2017-12-18)
+
+
+### Bug Fixes
+
+* Print array types in usage ([04b04b9](https://github.com/ls-age/expose/commits/04b04b9))
 
 
 ### Features
