@@ -22,12 +22,7 @@ export default class Expose extends Command {
   _resultHandler: (result: any) => void
   _errorHandler: ?ErrorHandler
 
-  logger: {
-    +debug: (...data: Array<any>) => void,
-    +info: (...data: Array<any>) => void,
-    +warn: (...data: Array<any>) => void,
-    +error: (...data: Array<any>) => void
-  }
+  logger: Logger
 
   constructor(options: ExposeOptions) {
     const name: string = process.argv[1];
