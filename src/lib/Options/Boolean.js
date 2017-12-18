@@ -11,14 +11,14 @@ export default class BooleanOption extends Option<boolean> {
     super(Object.assign({}, options, { schema }));
   }
 
-  async getValue(context: Context): Promise<boolean> | Promise<boolean[]> {
+  async getValue(context: Context): Promise<boolean | boolean[]> {
     if (!context.currentArg) {
       throw new Error('Cannot get value without a current arg');
     }
 
     const currentArg = context.currentArg;
 
-    let value: boolean;
+    let value: boolean | boolean[];
 
     try {
       value = await super.getValue(context);
@@ -30,6 +30,14 @@ export default class BooleanOption extends Option<boolean> {
       } else {
         throw e;
       }
+    }
+
+    if (currentArg.isNegated) {
+      if (Array.isArray(value)) {
+        return value.map(v => !v);
+      }
+
+      return !value;
     }
 
     return currentArg.isNegated ? !value : value;

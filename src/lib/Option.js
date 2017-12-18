@@ -73,10 +73,10 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
       this._setValueCallback = options.set;
     }
 
-    this._isArrayOption = options.array;
+    this._isArrayOption = options.array || false;
   }
 
-  async getValue(context: Context): Promise<T> | Promise<T[]> {
+  async getValue(context: Context): Promise<T | T[]> {
     const { currentArg } = context;
 
     let rawValue: string;
