@@ -11,7 +11,7 @@ export default class BooleanOption extends Option<boolean> {
     super(Object.assign({}, options, { schema }));
   }
 
-  async getValue(context: Context): Promise<boolean> {
+  async getValue(context: Context): Promise<boolean> | Promise<boolean[]> {
     if (!context.currentArg) {
       throw new Error('Cannot get value without a current arg');
     }
