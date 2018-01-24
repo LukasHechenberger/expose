@@ -12,6 +12,8 @@ type ErrorHandler = (error: Error) => void;
 
 type ExposeOptions = CommandOptions & {
   name?: string,
+  help?: boolean,
+  version?: string,
   onResult?: ResultHandler,
   onError?: ErrorHandler,
 }
@@ -37,6 +39,14 @@ export default class Expose extends Command {
 
     if (options.onError) {
       this._errorHandler = options.onError;
+    }
+
+    if (options.help) {
+      this.addHelp();
+    }
+
+    if (options.version) {
+      this.addVersion(options.version);
     }
   }
 
