@@ -21,8 +21,8 @@
   "homepage": "https://github.com/ls-age/expose#readme",
   "devDependencies": {
     "@ls-age/bump-version": "^0.1.1",
-    "@ls-age/eslint-config": "^0.6.0",
-    "ava": "^0.23.0",
+    "@ls-age/eslint-config": "^0.8.0",
+    "ava": "^0.24.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.2",
     "babel-preset-env": "^1.6.1",
@@ -31,21 +31,25 @@
     "conventional-github-releaser": "^2.0.0",
     "eslint": "^4.11.0",
     "flow": "^0.2.3",
-    "flow-bin": "^0.59.0",
+    "flow-bin": "^0.64.0",
+    "greenkeeper-lockfile": "^1.13.1",
     "standard-version": "^4.2.0"
   },
   "dependencies": {
     "@ls-age/logger": "^0.5.0-beta.0",
     "chalk": "^2.3.0",
     "string-length": "^2.0.0",
-    "yup": "^0.23.0"
+    "yup": "^0.24.0"
   },
   "eslintConfig": {
     "parser": "babel-eslint",
     "parserOptions": {
       "ecmaVersion": 2017
     },
-    "extends": "@ls-age"
+    "extends": "@ls-age",
+    "rules": {
+      "compat/compat": "off"
+    }
   },
   "babel": {
     "presets": [

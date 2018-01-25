@@ -13,6 +13,5 @@ flow-typed
 [options]
 all=true
 munge_underscores=true
-unsafe.enable_getters_and_setters=true
 
 [strict]
