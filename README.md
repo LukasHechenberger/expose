@@ -4,6 +4,8 @@
 >
 > The easy way to expose a module for CLI usage
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ls-age/expose.svg)](https://greenkeeper.io/)
+
 ## Installation
 
 ```bash
