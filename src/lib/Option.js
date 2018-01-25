@@ -35,7 +35,8 @@ export class InvalidArgumentError extends UsageError {
 export type TypedOptionOptions<T> = DescribableAliasOptions & {
   run?: RunAction,
   set?: SetValueCallback,
-  extendSchema?: (schema: Schema<T>) => Schema<T>
+  array?: boolean,
+  extendSchema?: (schema: Schema<T>) => Schema<T>,
 }
 
 export type RawOptionOptions<T> = TypedOptionOptions<T> & {
@@ -49,9 +50,10 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
   schema: Schema<T>
   _action: ?RunAction
   _setValueCallback: ?SetValueCallback
+  _isArrayOption: boolean
 
   get typeName(): string {
-    return this.schema._type;
+    return `${this.schema._type}${this._isArrayOption ? '[]' : ''}`;
   }
 
   constructor(options: RawOptionOptions<T>) {
@@ -70,9 +72,11 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
     if (options.set) {
       this._setValueCallback = options.set;
     }
+
+    this._isArrayOption = options.array || false;
   }
 
-  async getValue(context: Context): Promise<T> {
+  async getValue(context: Context): Promise<T | T[]> {
     const { currentArg } = context;
 
     let rawValue: string;
@@ -95,14 +99,13 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
       rawValue = nextArg.raw;
     }
 
+    let value: T | T[];
     try {
-      const converted: any = await this.schema.validate(rawValue, { abortEarly: false });
+      value = await this.schema.validate(rawValue, { abortEarly: false });
 
       if (pickValueArg) {
         context.pickNextArg();
       }
-
-      return converted;
     } catch (e) {
       throw new InvalidArgumentError(
         `Invalid value for '${this.name}' option: '${rawValue}'`,
@@ -110,6 +113,27 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
         context
       );
     }
+
+    if (this._isArrayOption) {
+      value = [value];
+
+      while (context.nextArg) {
+        const nextArg = context.nextArg;
+
+        if (nextArg.isOption || context.currentCommand.commands.get(nextArg.raw)) {
+          break;
+        } else {
+          try {
+            value.push(await this.schema.validate(nextArg.raw, { abortEarly: true }));
+            context.pickNextArg();
+          } catch (e) {
+            break;
+          }
+        }
+      }
+    }
+
+    return value;
   }
 
   async handle(context: Context): Promise<Context> {
@@ -138,7 +162,7 @@ export default class Option<T: OptionValue> extends DescribableAlias implements 
   }
 
   get usageInfo(): string[] {
-    return [...super.usageInfo, info(`[${this.typeName}]`)];
+    return [...super.usageInfo, info(`${this.typeName}`)];
   }
 
 }
