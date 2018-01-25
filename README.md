@@ -4,6 +4,7 @@
 >
 > The easy way to expose a module for CLI usage
 
+[![CircleCI](https://circleci.com/gh/ls-age/expose.svg?style=svg)](https://circleci.com/gh/ls-age/expose)
 [![Greenkeeper badge](https://badges.greenkeeper.io/ls-age/expose.svg)](https://greenkeeper.io/)
 
 ## Installation
