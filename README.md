@@ -1,10 +1,10 @@
 # @ls-age/expose
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/ls-age/expose.svg)](https://greenkeeper.io/)
-
 > **Work in progress**
 >
 > The easy way to expose a module for CLI usage
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/ls-age/expose.svg)](https://greenkeeper.io/)
 
 ## Installation
 
