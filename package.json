@@ -5,6 +5,7 @@
   "main": "out/index.js",
   "scripts": {
     "compile": "babel -d out src",
+    "copy-flow": "flow-copy-source src out",
     "flow": "flow",
     "lint": "eslint src test",
     "test": "ava"
@@ -32,6 +33,7 @@
     "eslint": "^4.11.0",
     "flow": "^0.2.3",
     "flow-bin": "^0.64.0",
+    "flow-copy-source": "^1.3.0",
     "greenkeeper-lockfile": "^1.13.1",
     "standard-version": "^4.2.0"
   },

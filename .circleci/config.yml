@@ -57,6 +57,9 @@ jobs:
           when: always
 
       # Deployment
+      - deploy:
+          name: Copying flow source files
+          command: npm run copy-flow
       - add_ssh_keys
       - deploy:
           name: Updating lockfile
