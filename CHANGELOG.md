@@ -1,10 +1,11 @@
-<a name="0.3.1-beta.0"></a>
-## 0.3.1-beta.0 (2018-02-21)
+<a name="0.3.1-beta.1"></a>
+## 0.3.1-beta.1 (2018-02-21)
 
 
 ### Bug Fixes
 
 * **flow:** Publish type annotations ([75be13f](https://github.com/ls-age/expose/commits/75be13f))
+* **flow:** Use flow comments ([59b1cc8](https://github.com/ls-age/expose/commits/59b1cc8))
 
 
 
