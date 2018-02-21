@@ -1,3 +1,4 @@
+// @flow
 import Expose from './lib/Expose';
 
 export default Expose;

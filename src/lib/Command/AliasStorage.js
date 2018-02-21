@@ -1,3 +1,4 @@
+// @flow
 import type { DescribableAlias } from '../Usage/Describable';
 
 export default class AliasStorage<T: DescribableAlias> {

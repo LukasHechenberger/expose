@@ -1,3 +1,4 @@
+// @flow
 import type Context from './Context';
 
 export default class ExposeError extends Error {

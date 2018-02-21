@@ -1,3 +1,4 @@
+// @flow
 import { number } from 'yup';
 import type { Schema } from 'yup'; // eslint-disable-line
 import Option from '../Option';

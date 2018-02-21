@@ -1,3 +1,4 @@
+// @flow
 import { UsageError } from './Error';
 import { DescribableAlias } from './Usage/Describable';
 import AliasStorage from './Command/AliasStorage';

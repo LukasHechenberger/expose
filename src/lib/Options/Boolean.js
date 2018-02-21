@@ -1,3 +1,4 @@
+// @flow
 import { boolean } from 'yup';
 import Option, { MissingArgumentError, InvalidArgumentError } from '../Option';
 import type Context from '../Context';

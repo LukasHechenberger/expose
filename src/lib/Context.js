@@ -1,3 +1,4 @@
+// @flow
 import Table from './Usage/Table';
 import print from './Usage/print';
 import { header, section, desc } from './Usage/format';

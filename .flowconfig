@@ -1,5 +1,4 @@
 [ignore]
-.*/node_modules/*
 .*/out/*
 
 [include]
@@ -11,7 +10,6 @@ flow-typed
 [lints]
 
 [options]
-all=true
 munge_underscores=true
 
 [strict]

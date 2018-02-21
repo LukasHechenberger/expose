@@ -1,3 +1,4 @@
+// @flow
 import stringLength from 'string-length';
 import { pad } from './print';
 import type { Printable, Align } from './print'; // eslint-disable-line

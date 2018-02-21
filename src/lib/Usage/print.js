@@ -1,3 +1,4 @@
+// @flow
 import stringLength from 'string-length';
 
 export interface Printable {

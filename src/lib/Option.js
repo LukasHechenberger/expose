@@ -1,3 +1,4 @@
+// @flow
 import type { Schema, ValidationError } from 'yup';
 import { UsageError } from './Error';
 import { DescribableAlias } from './Usage/Describable';

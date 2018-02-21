@@ -1,3 +1,4 @@
+// @flow
 import format from 'chalk';
 
 export default format;

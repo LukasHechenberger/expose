@@ -1,3 +1,4 @@
+// @flow
 import colors from 'chalk';
 import { Logger } from '@ls-age/logger';
 import Command from './Command';

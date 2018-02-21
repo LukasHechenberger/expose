@@ -1,3 +1,4 @@
+// @flow
 import { name, secondary, desc } from './format';
 
 export type DescribableOptions = {
